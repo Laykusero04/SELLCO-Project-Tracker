@@ -363,4 +363,8 @@ A Flutter-based commission tracking application for managing development project
 - Confirmation dialogs for destructive actions
 - Progress tracking for long-running operations
 
+## 📋 Development Assignment Plan
+
+For detailed development responsibilities and feature assignments between team members (Seve & Chrisvie), please refer to the [Development Assignment Plan](Development_Assignment_Plan.md) document.
+
 This documentation provides a comprehensive guide for developers to implement the SELLCO Project Tracking App with all required features and functionality while maintaining flexibility for database implementation decisions.
