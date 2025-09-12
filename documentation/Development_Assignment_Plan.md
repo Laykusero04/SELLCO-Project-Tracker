@@ -1,6 +1,6 @@
 # SELLCO Project Tracker - Development Assignment Plan
 
-## 👥 Team Division: Seve & Chrisvie
+## 👥 Team Division: Seve & Chrisvie (Full-Stack Developers)
 
 This document outlines the feature assignment and development responsibilities for the SELLCO Project Tracking App development team.
 
@@ -9,236 +9,199 @@ This document outlines the feature assignment and development responsibilities f
 ## 🎯 Development Strategy Overview
 
 ### Team Structure
-- **Seve**: Lead Developer & Backend Specialist
-- **Chrisvie**: Frontend Developer & UI/UX Specialist
+- **Seve**: Full-Stack Developer (Backend & Frontend)
+- **Chrisvie**: Full-Stack Developer (Backend & Frontend)
 
 ### Development Approach
-- **Parallel Development**: Both developers work simultaneously on different feature sets
+- **Parallel Full-Stack Development**: Both developers handle complete feature sets end-to-end
+- **Feature Ownership**: Each developer owns specific features from database to UI
 - **Regular Sync**: Daily standups and weekly integration reviews
 - **Code Review**: Cross-review of each other's work
 - **Shared Components**: Common utilities and services developed collaboratively
 
 ---
 
-## 📋 Feature Assignment Breakdown
+## 📋 Feature Assignment Breakdown (Full-Stack Ownership)
 
-### 🔐 **SEVE** - Backend & Core Systems
+### 🚀 **SEVE** - Complete Feature Set A
 
-#### Phase 1: Foundation & Authentication (Week 1-2)
-- **Firebase Configuration & Setup**
-  - Firebase project initialization
-  - Authentication configuration (email/password, role-based access)
-  - Firestore database schema design and setup
-  - Security rules implementation
-  - Environment configuration management
+#### Phase 1: Authentication & User Management (Week 1-2)
+**Backend Components:**
+- Firebase project initialization and configuration
+- Authentication service (email/password, role-based access)
+- User data models and Firestore schema
+- Security rules implementation
+- Session management and auto-logout logic
 
-- **Authentication System**
-  - User registration and login logic
-  - Role-based access control implementation
-  - Password reset functionality
-  - Session management and auto-logout
-  - User profile management
+**Frontend Components:**
+- Login screen design and implementation
+- Registration screen with role selection
+- Password reset flow UI
+- User profile management screens
+- Authentication state management
 
-- **Core Data Models**
-  - User model with role definitions
-  - Project model with all required fields
-  - Task model with status tracking
-  - Expense model with categorization
-  - Developer model with rate management
+#### Phase 2: Project Management System (Week 3-4)
+**Backend Components:**
+- Project CRUD operations and data models
+- Project status management system
+- Developer assignment logic and relationships
+- Project search and filtering services
+- Project duplication and archiving functionality
 
-#### Phase 2: Project Management Backend (Week 3-4)
-- **Project CRUD Operations**
-  - Create, read, update, delete project functionality
-  - Project status management system
-  - Project search and filtering logic
-  - Project duplication and archiving
+**Frontend Components:**
+- Project list with search and filters
+- Project creation/editing forms
+- Project detail view screens
+- Developer assignment interface
+- Project status management UI
+- Project dashboard and overview
 
-- **Developer Assignment System**
-  - Developer-project relationship management
-  - Rate calculation and tracking
-  - Workload distribution logic
-  - Developer availability tracking
+#### Phase 3: Task Management System (Week 5-6)
+**Backend Components:**
+- Task creation and assignment logic
+- Task status tracking and updates
+- Task dependency management
+- Time tracking implementation
+- Task search and filtering services
 
-- **Task Management Backend**
-  - Task creation and assignment logic
-  - Task status tracking and updates
-  - Task dependency management
-  - Time tracking implementation
+**Frontend Components:**
+- Kanban-style task board
+- Task creation/editing forms
+- Task detail view with comments
+- Time logging interface
+- Task progress tracking UI
+- Task dashboard for developers
 
-#### Phase 3: Financial System Backend (Week 5-6)
-- **Expense Management**
-  - Expense categorization system
-  - Receipt image handling and storage
-  - Recurring expense tracking
-  - Expense reporting and analytics
+#### Phase 4: Analytics & Reporting System (Week 7-8)
+**Backend Components:**
+- Performance metrics calculation
+- Report generation services
+- Data aggregation for analytics
+- Export functionality (PDF, CSV)
+- Dashboard data services
 
-- **Revenue & Commission System**
-  - Payment tracking and recording
-  - Commission calculation engine
-  - Financial reporting backend
-  - Invoice management system
-
-- **Analytics & Reporting Backend**
-  - Financial dashboard data aggregation
-  - Performance metrics calculation
-  - Report generation services
-  - Data export functionality
-
-#### Phase 4: Advanced Features Backend (Week 7-8)
-- **Notification System**
-  - Push notification service setup
-  - In-app notification management
-  - Email notification integration
-  - Notification preferences handling
-
-- **Communication System**
-  - In-app messaging backend
-  - File sharing service
-  - Communication history tracking
-  - Project comment system
-
-- **API Development**
-  - RESTful API endpoints
-  - Data validation and sanitization
-  - Error handling and logging
-  - Performance optimization
+**Frontend Components:**
+- Interactive charts and graphs
+- Report generation interface
+- Data visualization components
+- Customizable date range selectors
+- Export functionality UI
+- Analytics dashboard
 
 ---
 
-### 🎨 **CHRISVIE** - Frontend & User Experience
+### 🎯 **CHRISVIE** - Complete Feature Set B
 
-#### Phase 1: UI Foundation & Authentication (Week 1-2)
-- **App Architecture Setup**
-  - Flutter project structure optimization
-  - State management setup (Provider/Riverpod)
-  - Navigation system implementation
-  - Theme configuration (Material Design 3.0)
+#### Phase 1: Core Infrastructure & Navigation (Week 1-2)
+**Backend Components:**
+- Core data models (User, Project, Task, Expense)
+- Database schema design and relationships
+- Environment configuration management
+- API structure and error handling
+- Logging and monitoring setup
 
-- **Authentication Screens**
-  - Login screen design and implementation
-  - Registration screen with role selection
-  - Password reset flow UI
-  - Profile setup screens
-  - Loading states and error handling
+**Frontend Components:**
+- App architecture and navigation system
+- State management setup (Provider/Riverpod)
+- Theme configuration (Material Design 3.0)
+- Core UI components library
+- Loading states and error handling
 
-- **Core UI Components**
-  - Reusable button components
-  - Form input components with validation
-  - Loading indicators and progress bars
-  - Error message displays
-  - Navigation components
+#### Phase 2: Financial Management System (Week 3-4)
+**Backend Components:**
+- Expense management and categorization
+- Revenue tracking and payment recording
+- Commission calculation engine
+- Receipt image handling and storage
+- Financial reporting and analytics backend
 
-#### Phase 2: Admin Dashboard Frontend (Week 3-4)
-- **Dashboard Layout**
-  - Main dashboard overview design
-  - Navigation drawer/menu implementation
-  - Quick action buttons and shortcuts
-  - Recent activity feed UI
-  - Responsive layout for mobile and web
+**Frontend Components:**
+- Financial dashboard overview
+- Expense entry forms with categories
+- Payment tracking interface
+- Commission tracking UI
+- Expense list with filtering
+- Receipt upload interface
 
-- **Project Management UI**
-  - Project list with search and filters
-  - Project creation/editing forms
-  - Project detail view screens
-  - Developer assignment interface
-  - Project status management UI
+#### Phase 3: Developer Management & Communication (Week 5-6)
+**Backend Components:**
+- Developer management and rate tracking
+- In-app messaging system
+- File sharing service
+- Notification system (push, email, in-app)
+- Communication history tracking
 
-- **Task Management Interface**
-  - Kanban-style task board
-  - Task creation/editing forms
-  - Task detail view with comments
-  - Time logging interface
-  - Task progress tracking UI
+**Frontend Components:**
+- Developer dashboard
+- In-app messaging UI
+- File sharing interface
+- Notification center
+- Developer profile management
+- Communication history UI
 
-#### Phase 3: Financial Dashboard Frontend (Week 5-6)
-- **Financial Overview**
-  - Revenue and expense charts implementation
-  - Financial summary cards design
-  - Expense entry forms with categories
-  - Payment tracking interface
-  - Commission tracking UI
+#### Phase 4: Advanced Features & Optimization (Week 7-8)
+**Backend Components:**
+- Advanced notification preferences
+- Performance optimization
+- Caching strategies
+- Data backup and recovery
+- API rate limiting and security
 
-- **Expense Management UI**
-  - Expense list with filtering
-  - Expense creation/editing forms
-  - Receipt upload interface
-  - Expense categorization UI
-  - Expense reporting screens
-
-- **Analytics & Reports UI**
-  - Interactive charts and graphs
-  - Customizable date range selectors
-  - Report generation interface
-  - Data visualization components
-  - Export functionality UI
-
-#### Phase 4: Developer Dashboard & Advanced UI (Week 7-8)
-- **Developer Dashboard**
-  - Assigned projects overview
-  - Task list with status updates
-  - Time tracking interface
-  - Personal performance metrics
-  - Progress visualization
-
-- **Communication Interface**
-  - In-app messaging UI
-  - File sharing interface
-  - Notification center
-  - Communication history
-  - Comment system UI
-
-- **Advanced UI Features**
-  - Dark/Light theme implementation
-  - Offline capability UI indicators
-  - Mobile-optimized interactions
-  - Accessibility features
-  - Performance optimization
+**Frontend Components:**
+- Dark/Light theme implementation
+- Offline capability and sync
+- Mobile-optimized interactions
+- Accessibility features
+- Performance optimization
+- Advanced UI animations
 
 ---
 
 ## 🔄 Integration & Collaboration Points
 
 ### Shared Responsibilities
-- **Code Review**: Both developers review each other's code
-- **Testing**: Collaborative testing of integrated features
-- **Documentation**: Shared responsibility for code documentation
-- **Bug Fixes**: Joint debugging sessions for complex issues
+- **Code Review**: Cross-review of full-stack implementations
+- **Integration Testing**: End-to-end testing of combined features
+- **Documentation**: Shared responsibility for API and component documentation
+- **Bug Fixes**: Collaborative debugging for complex cross-feature issues
+- **Code Standards**: Consistent coding practices across both feature sets
 
 ### Integration Milestones
-- **Week 2**: Authentication system integration
-- **Week 4**: Project management feature integration
-- **Week 6**: Financial system integration
-- **Week 8**: Complete application integration and testing
+- **Week 2**: Core infrastructure and authentication integration
+- **Week 4**: Project management and financial system integration
+- **Week 6**: Task management and developer communication integration
+- **Week 8**: Complete application integration and performance optimization
 
 ### Communication Protocol
-- **Daily Standups**: 15-minute sync meetings
-- **Weekly Reviews**: Feature demonstration and feedback
-- **Slack/Discord**: Real-time communication channel
-- **Git Workflow**: Feature branches with pull requests
+- **Daily Standups**: 15-minute sync meetings to discuss progress and blockers
+- **Weekly Reviews**: Feature demonstration and cross-feature integration testing
+- **Slack/Discord**: Real-time communication for questions and coordination
+- **Git Workflow**: Feature branches with pull requests and mandatory reviews
+- **Shared Knowledge**: Weekly knowledge sharing sessions on new implementations
 
 ---
 
 ## 📅 Development Timeline
 
-### Sprint 1 (Week 1-2): Foundation
-- **Seve**: Firebase setup, authentication backend
-- **Chrisvie**: UI foundation, authentication screens
-- **Integration**: Authentication flow testing
+### Sprint 1 (Week 1-2): Foundation & Infrastructure
+- **Seve**: Complete authentication system (backend + frontend)
+- **Chrisvie**: Core infrastructure and navigation system (backend + frontend)
+- **Integration**: Authentication flow and app navigation testing
 
-### Sprint 2 (Week 3-4): Core Features
-- **Seve**: Project management backend, task system
-- **Chrisvie**: Admin dashboard, project management UI
-- **Integration**: Project CRUD operations testing
+### Sprint 2 (Week 3-4): Core Business Features
+- **Seve**: Complete project management system (backend + frontend)
+- **Chrisvie**: Complete financial management system (backend + frontend)
+- **Integration**: Project CRUD and financial operations testing
 
-### Sprint 3 (Week 5-6): Financial Features
-- **Seve**: Financial backend, commission system
-- **Chrisvie**: Financial dashboard, expense management UI
-- **Integration**: Financial system testing
+### Sprint 3 (Week 5-6): Task & Communication Features
+- **Seve**: Complete task management system (backend + frontend)
+- **Chrisvie**: Developer management and communication system (backend + frontend)
+- **Integration**: Task workflows and developer communication testing
 
-### Sprint 4 (Week 7-8): Advanced Features
-- **Seve**: Notifications, communication backend
-- **Chrisvie**: Developer dashboard, advanced UI features
-- **Integration**: Complete application testing and optimization
+### Sprint 4 (Week 7-8): Analytics & Optimization
+- **Seve**: Analytics and reporting system (backend + frontend)
+- **Chrisvie**: Advanced features and optimization (backend + frontend)
+- **Integration**: Complete application testing, performance optimization, and deployment
 
 ---
 
