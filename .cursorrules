@@ -1,0 +1,239 @@
+# SELLCO Project Tracker - Cursor AI Rules
+
+## Project Overview
+This is a Flutter-based commission tracking application for managing development projects, developers, and company expenses. The app provides comprehensive project management, financial tracking, and developer collaboration tools.
+
+## Tech Stack
+- **Framework**: Flutter (SDK: ^3.8.1)
+- **Language**: Dart
+- **Backend**: Firebase (Firestore + Auth)
+- **State Management**: BLoC pattern (flutter_bloc: ^9.1.1)
+- **Authentication**: Firebase Auth (^6.0.2)
+- **Platforms**: iOS, Android, Web, Windows, Linux, macOS
+
+## Architecture & Patterns
+
+### BLoC Pattern
+- All state management uses the BLoC (Business Logic Component) pattern
+- Separate events, states, and bloc files for each feature
+- Current structure: `lib/bloc/` contains auth-related BLoC files
+- When creating new features, follow the same pattern:
+  - `feature_bloc.dart` - Main bloc logic
+  - `feature_event.dart` - Event definitions
+  - `feature_state.dart` - State definitions
+
+### Project Structure
+```
+lib/
+├── main.dart              # App entry point with Firebase initialization
+├── app.dart               # Root widget and routing
+├── bloc/                  # BLoC state management
+│   ├── auth_bloc.dart
+│   ├── auth_event.dart
+│   └── auth_state.dart
+├── screens/               # UI screens
+│   ├── login_screen.dart
+│   └── home_screen.dart
+├── components/            # Reusable widgets
+│   └── constant/          # App constants
+├── service/               # Backend services
+│   └── firebase_service.dart
+└── firebase_options.dart  # Firebase configuration
+```
+
+## Code Style & Conventions
+
+### General Flutter Guidelines
+1. **Naming Conventions**:
+   - Files: Use snake_case (e.g., `auth_bloc.dart`)
+   - Classes: Use PascalCase (e.g., `AuthBloc`)
+   - Variables/Functions: Use camelCase (e.g., `currentUser`)
+   - Constants: Use lowerCamelCase (e.g., `defaultTimeout`)
+
+2. **Widget Structure**:
+   - Prefer const constructors whenever possible for performance
+   - Use StatelessWidget when state is not needed
+   - Use StatefulWidget only when internal state management is required
+   - For complex state, always use BLoC pattern
+
+3. **Code Organization**:
+   - Keep widgets small and focused (extract to separate widgets)
+   - Put business logic in BLoC, not in widgets
+   - Use services for Firebase/API interactions
+   - Keep screens focused on UI composition
+
+### BLoC Implementation Guidelines
+1. Always separate events, states, and bloc logic into different files
+2. Use meaningful event and state names (e.g., `AuthSignInRequested`, `AuthAuthenticated`)
+3. Handle loading and error states explicitly
+4. Emit states in try-catch blocks for error handling
+5. Use `BlocProvider` in `main.dart` or at the appropriate widget level
+6. Use `BlocBuilder` for UI updates based on state changes
+7. Listen to Firebase auth state changes within BLoC
+
+### Firebase Integration
+1. **Initialization**:
+   - Firebase is initialized in `main.dart` before `runApp()`
+   - Use `DefaultFirebaseOptions.currentPlatform` for configuration
+   - Handle web-specific persistence settings
+
+2. **Authentication**:
+   - All Firebase Auth operations go through `FirebaseService`
+   - Never call Firebase Auth directly from UI code
+   - Use BLoC events to trigger authentication operations
+   - Handle auth state changes through BLoC
+
+3. **Error Handling**:
+   - Always wrap Firebase calls in try-catch blocks
+   - Provide user-friendly error messages
+   - Use `debugPrint` for development logs (not `print`)
+
+## Development Guidelines
+
+### User Roles & Access Control
+- **Admin**: Full access to all features and data
+- **Developer**: Limited access to assigned projects and personal tasks
+- Implement role-based UI and data filtering
+
+### Key Features to Implement
+1. **Authentication System**:
+   - Login, registration, password reset
+   - Role-based access control
+   - Session management
+   - Profile management
+
+2. **Admin Dashboard**:
+   - Project management (CRUD operations)
+   - Developer assignment
+   - Task management
+   - Financial tracking (expenses, revenue, commissions)
+   - Analytics and reporting
+
+3. **Developer Dashboard**:
+   - View assigned projects
+   - Task management and updates
+   - Time tracking
+   - Personal performance metrics
+
+### UI/UX Requirements
+- Use Material Design 3.0 principles
+- Implement dark/light theme support
+- Ensure responsive design for all platforms
+- Add loading indicators for async operations
+- Show clear error messages and success feedback
+- Use confirmation dialogs for destructive actions
+
+### Performance Best Practices
+1. Use const constructors for static widgets
+2. Implement pagination for large lists
+3. Use `ListView.builder` for dynamic lists
+4. Optimize images and assets
+5. Cache Firebase data appropriately
+6. Handle offline scenarios gracefully
+
+### Testing Requirements
+- Write unit tests for BLoC logic
+- Test Firebase service methods
+- Add widget tests for critical UI flows
+- Test error handling scenarios
+
+## Platform-Specific Considerations
+
+### Web
+- Auth persistence is set to LOCAL for web platform
+- Handle web-specific Firebase configuration
+- Test responsive layouts for different screen sizes
+
+### Mobile (iOS/Android)
+- Biometric authentication support (future feature)
+- Camera integration for receipt capture
+- Offline capability for viewing projects
+- Push notifications for important events
+
+### Desktop (Windows/Linux/macOS)
+- Ensure keyboard navigation works properly
+- Adapt UI for larger screens
+- Test window resizing behavior
+
+## Common Commands
+```bash
+# Run on specific platform
+flutter run -d chrome        # Web
+flutter run -d windows       # Windows
+flutter run -d android       # Android
+
+# Build for release
+flutter build apk --release
+flutter build web --release
+flutter build windows --release
+
+# Update dependencies
+flutter pub get
+flutter pub upgrade
+
+# Run tests
+flutter test
+
+# Check for issues
+flutter analyze
+```
+
+## Code Quality
+- Follow the lints defined in `analysis_options.yaml`
+- Run `flutter analyze` before committing
+- Fix all linter warnings and errors
+- Write meaningful commit messages
+- Keep functions small and focused
+- Add comments for complex logic
+- Document public APIs
+
+## Security Guidelines
+1. Never commit sensitive data (API keys, passwords)
+2. Use environment variables for configuration
+3. Validate all user inputs
+4. Implement proper error handling
+5. Use secure storage for sensitive data
+6. Follow Firebase security rules best practices
+
+## Documentation
+- Refer to `documentation/SELLCO_Project_Tracker_Documentation.md` for feature details
+- Refer to `documentation/Development_Assignment_Plan.md` for task assignments
+- Keep documentation updated as features are added
+- Add inline comments for complex business logic
+
+## When Making Changes
+1. **Adding New Features**:
+   - Create BLoC files if state management is needed
+   - Add Firebase service methods in `firebase_service.dart`
+   - Create screen files in `lib/screens/`
+   - Update routing in `app.dart`
+
+2. **Modifying Existing Code**:
+   - Maintain consistency with existing patterns
+   - Update related BLoC events and states
+   - Test authentication flows after changes
+   - Ensure backward compatibility
+
+3. **UI Development**:
+   - Follow Material Design guidelines
+   - Use theme colors and typography
+   - Ensure accessibility (screen readers, contrast)
+   - Test on multiple screen sizes
+   - Add loading states and error handling
+
+## Firebase Collections Structure (Future)
+When implementing Firestore:
+- `users/` - User profiles and roles
+- `projects/` - Project details and assignments
+- `tasks/` - Task information and status
+- `expenses/` - Company expense records
+- `payments/` - Payment and commission tracking
+- `developers/` - Developer profiles and rates
+
+## Additional Notes
+- This is a private package (`publish_to: 'none'`)
+- App supports multiple platforms - test features on target platforms
+- Use `kIsWeb` from `package:flutter/foundation.dart` for web-specific code
+- Firebase is configured for all platforms through `firebase_options.dart`
+- Follow Flutter best practices and community conventions
+

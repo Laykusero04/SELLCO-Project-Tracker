@@ -14,7 +14,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'SPT',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.redAccent),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.red,
+          brightness: Brightness.light,
+        ).copyWith(
+          primary: Colors.red,
+          secondary: Colors.redAccent,
+        ),
         useMaterial3: true,
       ),
       home: const AuthGate(),
