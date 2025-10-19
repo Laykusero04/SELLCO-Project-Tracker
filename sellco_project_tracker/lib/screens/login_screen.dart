@@ -28,20 +28,9 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
-    
+
     context.read<AuthBloc>().add(
       AuthSignInRequested(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-      ),
-    );
-  }
-
-  void _register() {
-    if (!_formKey.currentState!.validate()) return;
-    
-    context.read<AuthBloc>().add(
-      AuthSignUpRequested(
         email: _emailController.text.trim(),
         password: _passwordController.text,
       ),
@@ -126,34 +115,19 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
                             },
                           ),
                           const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: SizedBox(
-                                  height: 48,
-                                  child: FilledButton(
-                                    onPressed: _isLoading ? null : _submit,
-                                    child: _isLoading
-                                        ? const SizedBox(
-                                            width: 20,
-                                            height: 20,
-                                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                                          )
-                                        : const Text('Login'),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: SizedBox(
-                                  height: 48,
-                                  child: OutlinedButton(
-                                    onPressed: _isLoading ? null : _register,
-                                    child: const Text('Register'),
-                                  ),
-                                ),
-                              ),
-                            ],
+                          SizedBox(
+                            height: 48,
+                            width: double.infinity,
+                            child: FilledButton(
+                              onPressed: _isLoading ? null : _submit,
+                              child: _isLoading
+                                  ? const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                    )
+                                  : const Text('Login'),
+                            ),
                           ),
                         ],
                       ),
