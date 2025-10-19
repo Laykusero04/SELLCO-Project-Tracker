@@ -16,7 +16,7 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool _isLoading = false;
-  String? _errorText;
+  bool _obscurePassword = true;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -43,13 +43,19 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
       listener: (context, state) {
         if (state is AuthError) {
           setState(() {
-            _errorText = state.message;
             _isLoading = false;
           });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 4),
+            ),
+          );
         } else if (state is AuthLoading) {
           setState(() {
             _isLoading = true;
-            _errorText = null;
           });
         }
       },
@@ -84,15 +90,6 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
                             style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 16),
-                          if (_errorText != null)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 16),
-                              child: Text(
-                                _errorText!,
-                                style: TextStyle(color: Theme.of(context).colorScheme.error),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
                           TextFormField(
                             controller: _emailController,
                             keyboardType: TextInputType.emailAddress,
@@ -106,8 +103,21 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
                           const SizedBox(height: 12),
                           TextFormField(
                             controller: _passwordController,
-                            obscureText: true,
-                            decoration: const InputDecoration(labelText: 'Password', border: OutlineInputBorder()),
+                            obscureText: _obscurePassword,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              border: const OutlineInputBorder(),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _obscurePassword = !_obscurePassword;
+                                  });
+                                },
+                              ),
+                            ),
                             validator: (v) {
                               if (v == null || v.isEmpty) return 'Password is required';
                               if (v.length < 6) return 'Min 6 characters';
