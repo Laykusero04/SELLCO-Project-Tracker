@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
+import '../components/custom_app_bar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -12,24 +13,13 @@ class HomeScreen extends StatelessWidget {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         String userEmail = 'Unknown';
-        String userName = 'User';
         if (state is AuthAuthenticated) {
           userEmail = state.user.email ?? 'Unknown';
-          userName = state.user.displayName ?? state.user.email?.split('@')[0] ?? 'User';
         }
         
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('SELLCO Project Tracker'),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.notifications_outlined),
-                tooltip: 'Notifications',
-                onPressed: () {
-                  // TODO: Implement notifications
-                },
-              ),
-            ],
+          appBar: const CustomAppBar(
+            title: 'Project Tracker',
           ),
           drawer: Drawer(
             child: ListView(
@@ -42,7 +32,7 @@ class HomeScreen extends StatelessWidget {
                   currentAccountPicture: CircleAvatar(
                     backgroundColor: Theme.of(context).colorScheme.surface,
                     child: Text(
-                      userName[0].toUpperCase(),
+                      userEmail[0].toUpperCase(),
                       style: TextStyle(
                         fontSize: 40,
                         color: Theme.of(context).colorScheme.primary,
@@ -50,7 +40,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   accountName: Text(
-                    userName,
+                    userEmail.split('@')[0],
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,

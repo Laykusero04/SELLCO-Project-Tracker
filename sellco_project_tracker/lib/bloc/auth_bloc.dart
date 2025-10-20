@@ -48,8 +48,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } else {
         emit(AuthError(message: 'Sign in failed'));
       }
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      switch (e.code) {
+        case 'invalid-credential':
+        case 'wrong-password':
+        case 'user-not-found':
+          errorMessage = 'Invalid email or password';
+          break;
+        case 'invalid-email':
+          errorMessage = 'Invalid email address';
+          break;
+        case 'user-disabled':
+          errorMessage = 'This account has been disabled';
+          break;
+        case 'too-many-requests':
+          errorMessage = 'Too many attempts. Please try again later';
+          break;
+        default:
+          errorMessage = 'Login failed. Please try again';
+      }
+      emit(AuthError(message: errorMessage));
     } catch (e) {
-      emit(AuthError(message: e.toString()));
+      emit(AuthError(message: 'An unexpected error occurred'));
     }
   }
 
