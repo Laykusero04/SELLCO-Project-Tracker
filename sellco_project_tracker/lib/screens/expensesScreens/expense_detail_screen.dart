@@ -21,6 +21,8 @@ class ExpenseDetailScreen extends StatefulWidget {
 }
 
 class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
+  ExpenseModel? _lastLoadedExpense;
+
   @override
   void initState() {
     super.initState();
@@ -232,8 +234,7 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
                 backgroundColor: Colors.green,
               ),
             );
-            // Reload expense details
-            context.read<ExpenseBloc>().add(LoadExpenseDetails(widget.expenseId));
+            // No need to reload - the BLoC handles it automatically
           } else if (state is ExpenseError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -247,7 +248,15 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
           if (state is ExpenseLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is ExpenseDetailsLoaded) {
+            // Cache the expense for display during operation success states
+            _lastLoadedExpense = state.expense;
             return _buildExpenseDetails(state.expense);
+          } else if (state is ExpenseOperationSuccess) {
+            // Keep showing the last loaded expense while success message displays
+            if (_lastLoadedExpense != null) {
+              return _buildExpenseDetails(_lastLoadedExpense!);
+            }
+            return const Center(child: CircularProgressIndicator());
           } else if (state is ExpenseError) {
             return Center(
               child: Column(

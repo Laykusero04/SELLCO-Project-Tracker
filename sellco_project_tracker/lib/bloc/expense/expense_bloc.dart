@@ -60,6 +60,9 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
       List<ExpenseModel>? preservedList;
       if (state is ExpensesLoaded) {
         preservedList = (state as ExpensesLoaded).expenses;
+      } else if (state is ExpenseDetailsLoaded) {
+        // If we're reloading details (e.g., after status change), preserve the list
+        preservedList = (state as ExpenseDetailsLoaded).preservedExpensesList;
       }
       
       // Only emit loading if we don't have a preserved list
@@ -200,9 +203,24 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
     Emitter<ExpenseState> emit,
   ) async {
     try {
-      emit(ExpenseLoading());
+      // Preserve the list if we're in details view
+      List<ExpenseModel>? preservedList;
+      if (state is ExpenseDetailsLoaded) {
+        preservedList = (state as ExpenseDetailsLoaded).preservedExpensesList;
+      }
+      
       await _firebaseService.approveExpense(event.expenseId);
-      emit(ExpenseOperationSuccess('Expense approved successfully'));
+      
+      // Reload the expense details with preserved list
+      final expense = await _firebaseService.getExpenseById(event.expenseId);
+      if (expense != null) {
+        emit(ExpenseDetailsLoaded(expense, preservedExpensesList: preservedList));
+        // Show success message temporarily
+        await Future.delayed(const Duration(milliseconds: 100));
+        emit(ExpenseOperationSuccess('Expense approved successfully'));
+        // Restore details state
+        emit(ExpenseDetailsLoaded(expense, preservedExpensesList: preservedList));
+      }
     } catch (e) {
       debugPrint('Approve expense error: $e');
       emit(ExpenseError('Failed to approve expense: ${e.toString()}'));
@@ -215,9 +233,24 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
     Emitter<ExpenseState> emit,
   ) async {
     try {
-      emit(ExpenseLoading());
+      // Preserve the list if we're in details view
+      List<ExpenseModel>? preservedList;
+      if (state is ExpenseDetailsLoaded) {
+        preservedList = (state as ExpenseDetailsLoaded).preservedExpensesList;
+      }
+      
       await _firebaseService.markExpenseAsPaid(event.expenseId);
-      emit(ExpenseOperationSuccess('Expense marked as paid'));
+      
+      // Reload the expense details with preserved list
+      final expense = await _firebaseService.getExpenseById(event.expenseId);
+      if (expense != null) {
+        emit(ExpenseDetailsLoaded(expense, preservedExpensesList: preservedList));
+        // Show success message temporarily
+        await Future.delayed(const Duration(milliseconds: 100));
+        emit(ExpenseOperationSuccess('Expense marked as paid'));
+        // Restore details state
+        emit(ExpenseDetailsLoaded(expense, preservedExpensesList: preservedList));
+      }
     } catch (e) {
       debugPrint('Mark expense as paid error: $e');
       emit(ExpenseError('Failed to mark expense as paid: ${e.toString()}'));
@@ -230,9 +263,24 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
     Emitter<ExpenseState> emit,
   ) async {
     try {
-      emit(ExpenseLoading());
+      // Preserve the list if we're in details view
+      List<ExpenseModel>? preservedList;
+      if (state is ExpenseDetailsLoaded) {
+        preservedList = (state as ExpenseDetailsLoaded).preservedExpensesList;
+      }
+      
       await _firebaseService.rejectExpense(event.expenseId, event.reason);
-      emit(ExpenseOperationSuccess('Expense rejected'));
+      
+      // Reload the expense details with preserved list
+      final expense = await _firebaseService.getExpenseById(event.expenseId);
+      if (expense != null) {
+        emit(ExpenseDetailsLoaded(expense, preservedExpensesList: preservedList));
+        // Show success message temporarily
+        await Future.delayed(const Duration(milliseconds: 100));
+        emit(ExpenseOperationSuccess('Expense rejected'));
+        // Restore details state
+        emit(ExpenseDetailsLoaded(expense, preservedExpensesList: preservedList));
+      }
     } catch (e) {
       debugPrint('Reject expense error: $e');
       emit(ExpenseError('Failed to reject expense: ${e.toString()}'));
