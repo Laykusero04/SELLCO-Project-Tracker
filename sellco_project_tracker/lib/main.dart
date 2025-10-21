@@ -7,6 +7,7 @@ import 'firebase_options.dart';
 import 'app.dart';
 import 'bloc/auth_bloc.dart';
 import 'bloc/auth_event.dart';
+import 'bloc/expense/expense_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,8 +32,15 @@ void main() async {
   }
   
   runApp(
-    BlocProvider(
-      create: (context) => AuthBloc()..add(AuthCheckRequested()),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => AuthBloc()..add(AuthCheckRequested()),
+        ),
+        BlocProvider(
+          create: (context) => ExpenseBloc(),
+        ),
+      ],
       child: const MyApp(),
     ),
   );
