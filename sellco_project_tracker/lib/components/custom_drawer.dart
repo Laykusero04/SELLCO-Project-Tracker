@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
-import '../screens/expenses_screen.dart';
+import '../screens/expensesScreens/expenses_screen.dart';
 
 class CustomDrawer extends StatelessWidget {
   final String currentRoute;

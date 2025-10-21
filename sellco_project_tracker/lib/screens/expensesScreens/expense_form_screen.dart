@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import '../bloc/expense/expense_bloc.dart';
-import '../bloc/expense/expense_event.dart';
-import '../bloc/expense/expense_state.dart';
-import '../models/expense_model.dart';
-import '../components/constant/expense_categories.dart';
-import '../service/firebase_service.dart';
+import '../../bloc/expense/expense_bloc.dart';
+import '../../bloc/expense/expense_event.dart';
+import '../../bloc/expense/expense_state.dart';
+import '../../models/expensesModels/expense_model.dart';
+import '../../components/constant/expense_categories.dart';
+import '../../service/firebase_service.dart';
 
 class ExpenseFormScreen extends StatefulWidget {
   final ExpenseModel? expense;
@@ -43,8 +41,6 @@ class _ExpenseFormScreenState extends State<ExpenseFormScreen> {
   bool _isRecurring = false;
   String? _recurrencePeriod;
   DateTime? _nextRecurrenceDate;
-  List<File> _receiptFiles = [];
-  final ImagePicker _imagePicker = ImagePicker();
 
   @override
   void initState() {
@@ -84,38 +80,6 @@ class _ExpenseFormScreenState extends State<ExpenseFormScreen> {
     super.dispose();
   }
 
-  Future<void> _pickImage() async {
-    final XFile? image = await _imagePicker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 80,
-    );
-
-    if (image != null) {
-      setState(() {
-        _receiptFiles.add(File(image.path));
-      });
-    }
-  }
-
-  Future<void> _takePicture() async {
-    final XFile? image = await _imagePicker.pickImage(
-      source: ImageSource.camera,
-      imageQuality: 80,
-    );
-
-    if (image != null) {
-      setState(() {
-        _receiptFiles.add(File(image.path));
-      });
-    }
-  }
-
-  void _removeReceipt(int index) {
-    setState(() {
-      _receiptFiles.removeAt(index);
-    });
-  }
-
   void _submitForm() {
     if (!_formKey.currentState!.validate()) {
       return;
@@ -148,7 +112,6 @@ class _ExpenseFormScreenState extends State<ExpenseFormScreen> {
       paymentMethod: _selectedPaymentMethod,
       vendorName: _vendorNameController.text.trim(),
       vendorContact: _vendorContactController.text.trim(),
-      receiptUrls: widget.expense?.receiptUrls ?? [],
       isRecurring: _isRecurring,
       recurrencePeriod: _isRecurring ? _recurrencePeriod : null,
       nextRecurrenceDate: _isRecurring ? _nextRecurrenceDate : null,
@@ -165,15 +128,11 @@ class _ExpenseFormScreenState extends State<ExpenseFormScreen> {
             UpdateExpense(
               widget.expense!.expenseId,
               expense,
-              newReceiptFiles: _receiptFiles.isNotEmpty ? _receiptFiles : null,
             ),
           );
     } else {
       context.read<ExpenseBloc>().add(
-            AddExpense(
-              expense,
-              receiptFiles: _receiptFiles.isNotEmpty ? _receiptFiles : null,
-            ),
+            AddExpense(expense),
           );
     }
   }
@@ -492,88 +451,6 @@ class _ExpenseFormScreenState extends State<ExpenseFormScreen> {
                   });
                 },
               ),
-              const SizedBox(height: 24),
-
-              // Receipt Section
-              _buildSectionHeader('Receipt'),
-              const SizedBox(height: 16),
-
-              if (_receiptFiles.isEmpty)
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        const Icon(Icons.receipt_long, size: 48, color: Colors.grey),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'No receipt attached',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton.icon(
-                              onPressed: _pickImage,
-                              icon: const Icon(Icons.photo_library),
-                              label: const Text('Choose Image'),
-                            ),
-                            const SizedBox(width: 16),
-                            ElevatedButton.icon(
-                              onPressed: _takePicture,
-                              icon: const Icon(Icons.camera_alt),
-                              label: const Text('Take Photo'),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              else
-                Column(
-                  children: [
-                    ..._receiptFiles.asMap().entries.map((entry) {
-                      final index = entry.key;
-                      final file = entry.value;
-                      return Card(
-                        margin: const EdgeInsets.only(bottom: 8),
-                        child: ListTile(
-                          leading: Image.file(
-                            file,
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                          ),
-                          title: Text('Receipt ${index + 1}'),
-                          subtitle: Text(file.path.split('/').last),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => _removeReceipt(index),
-                          ),
-                        ),
-                      );
-                    }),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton.icon(
-                          onPressed: _pickImage,
-                          icon: const Icon(Icons.add_photo_alternate),
-                          label: const Text('Add Another'),
-                        ),
-                        const SizedBox(width: 16),
-                        TextButton.icon(
-                          onPressed: _takePicture,
-                          icon: const Icon(Icons.camera_alt),
-                          label: const Text('Take Photo'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
               const SizedBox(height: 24),
 
               // Recurring Settings Section

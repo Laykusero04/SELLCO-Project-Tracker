@@ -12,7 +12,6 @@ class ExpenseModel {
   final String paymentMethod;
   final String vendorName;
   final String vendorContact;
-  final List<String> receiptUrls;
   final bool isRecurring;
   final String? recurrencePeriod;
   final DateTime? nextRecurrenceDate;
@@ -41,7 +40,6 @@ class ExpenseModel {
     required this.paymentMethod,
     this.vendorName = '',
     this.vendorContact = '',
-    this.receiptUrls = const [],
     this.isRecurring = false,
     this.recurrencePeriod,
     this.nextRecurrenceDate,
@@ -73,7 +71,6 @@ class ExpenseModel {
       'payment_method': paymentMethod,
       'vendor_name': vendorName,
       'vendor_contact': vendorContact,
-      'receipt_urls': receiptUrls,
       'is_recurring': isRecurring,
       'recurrence_period': recurrencePeriod,
       'next_recurrence_date': nextRecurrenceDate != null
@@ -109,7 +106,6 @@ class ExpenseModel {
       paymentMethod: map['payment_method'] ?? '',
       vendorName: map['vendor_name'] ?? '',
       vendorContact: map['vendor_contact'] ?? '',
-      receiptUrls: List<String>.from(map['receipt_urls'] ?? []),
       isRecurring: map['is_recurring'] ?? false,
       recurrencePeriod: map['recurrence_period'],
       nextRecurrenceDate: map['next_recurrence_date'] != null
@@ -147,7 +143,6 @@ class ExpenseModel {
     String? paymentMethod,
     String? vendorName,
     String? vendorContact,
-    List<String>? receiptUrls,
     bool? isRecurring,
     String? recurrencePeriod,
     DateTime? nextRecurrenceDate,
@@ -176,7 +171,6 @@ class ExpenseModel {
       paymentMethod: paymentMethod ?? this.paymentMethod,
       vendorName: vendorName ?? this.vendorName,
       vendorContact: vendorContact ?? this.vendorContact,
-      receiptUrls: receiptUrls ?? this.receiptUrls,
       isRecurring: isRecurring ?? this.isRecurring,
       recurrencePeriod: recurrencePeriod ?? this.recurrencePeriod,
       nextRecurrenceDate: nextRecurrenceDate ?? this.nextRecurrenceDate,

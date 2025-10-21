@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import '../../service/firebase_service.dart';
+import '../../models/expensesModels/expense_model.dart';
 import 'expense_event.dart';
 import 'expense_state.dart';
 
@@ -18,8 +19,6 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
     on<PermanentlyDeleteExpense>(_onPermanentlyDeleteExpense);
     on<SearchExpenses>(_onSearchExpenses);
     on<FilterExpenses>(_onFilterExpenses);
-    on<UploadReceipt>(_onUploadReceipt);
-    on<DeleteReceipt>(_onDeleteReceipt);
     on<ApproveExpense>(_onApproveExpense);
     on<MarkExpenseAsPaid>(_onMarkExpenseAsPaid);
     on<RejectExpense>(_onRejectExpense);
@@ -57,11 +56,25 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
     Emitter<ExpenseState> emit,
   ) async {
     try {
-      emit(ExpenseLoading());
+      // Preserve the current list state if it exists
+      List<ExpenseModel>? preservedList;
+      if (state is ExpensesLoaded) {
+        preservedList = (state as ExpensesLoaded).expenses;
+      }
+      
+      // Only emit loading if we don't have a preserved list
+      if (preservedList == null) {
+        emit(ExpenseLoading());
+      }
+      
       final expense = await _firebaseService.getExpenseById(event.expenseId);
       if (expense != null) {
-        emit(ExpenseDetailsLoaded(expense));
+        emit(ExpenseDetailsLoaded(expense, preservedExpensesList: preservedList));
       } else {
+        // If expense not found, restore the list or show error
+        if (preservedList != null) {
+          emit(ExpensesLoaded(preservedList));
+        }
         emit(ExpenseError('Expense not found'));
       }
     } catch (e) {
@@ -81,22 +94,6 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
       // Create expense in Firestore
       final expenseId = await _firebaseService.createExpense(event.expense);
 
-      // Upload receipts if provided
-      List<String> receiptUrls = [];
-      if (event.receiptFiles != null && event.receiptFiles!.isNotEmpty) {
-        for (var file in event.receiptFiles!) {
-          final url = await _firebaseService.uploadReceipt(expenseId, file);
-          receiptUrls.add(url);
-        }
-
-        // Update expense with receipt URLs
-        final updatedExpense = event.expense.copyWith(
-          expenseId: expenseId,
-          receiptUrls: receiptUrls,
-        );
-        await _firebaseService.updateExpense(expenseId, updatedExpense);
-      }
-
       emit(ExpenseOperationSuccess('Expense added successfully', expenseId: expenseId));
     } catch (e) {
       debugPrint('Add expense error: $e');
@@ -112,18 +109,8 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
     try {
       emit(ExpenseLoading());
 
-      // Upload new receipts if provided
-      List<String> newReceiptUrls = List.from(event.expense.receiptUrls);
-      if (event.newReceiptFiles != null && event.newReceiptFiles!.isNotEmpty) {
-        for (var file in event.newReceiptFiles!) {
-          final url = await _firebaseService.uploadReceipt(event.expenseId, file);
-          newReceiptUrls.add(url);
-        }
-      }
-
-      // Update expense with new receipt URLs
+      // Update expense
       final updatedExpense = event.expense.copyWith(
-        receiptUrls: newReceiptUrls,
         updatedAt: DateTime.now(),
       );
 
@@ -204,56 +191,6 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
     } catch (e) {
       debugPrint('Filter expenses error: $e');
       emit(ExpenseError('Failed to filter expenses: ${e.toString()}'));
-    }
-  }
-
-  // Upload receipt
-  Future<void> _onUploadReceipt(
-    UploadReceipt event,
-    Emitter<ExpenseState> emit,
-  ) async {
-    try {
-      emit(ExpenseLoading());
-      final url = await _firebaseService.uploadReceipt(event.expenseId, event.imageFile);
-
-      // Get the expense and add the new receipt URL
-      final expense = await _firebaseService.getExpenseById(event.expenseId);
-      if (expense != null) {
-        final updatedReceiptUrls = List<String>.from(expense.receiptUrls)..add(url);
-        final updatedExpense = expense.copyWith(receiptUrls: updatedReceiptUrls);
-        await _firebaseService.updateExpense(event.expenseId, updatedExpense);
-      }
-
-      emit(ReceiptUploaded(url));
-    } catch (e) {
-      debugPrint('Upload receipt error: $e');
-      emit(ExpenseError('Failed to upload receipt: ${e.toString()}'));
-    }
-  }
-
-  // Delete receipt
-  Future<void> _onDeleteReceipt(
-    DeleteReceipt event,
-    Emitter<ExpenseState> emit,
-  ) async {
-    try {
-      emit(ExpenseLoading());
-
-      // Delete from storage
-      await _firebaseService.deleteReceipt(event.receiptUrl);
-
-      // Update expense to remove receipt URL
-      final expense = await _firebaseService.getExpenseById(event.expenseId);
-      if (expense != null) {
-        final updatedReceiptUrls = expense.receiptUrls.where((url) => url != event.receiptUrl).toList();
-        final updatedExpense = expense.copyWith(receiptUrls: updatedReceiptUrls);
-        await _firebaseService.updateExpense(event.expenseId, updatedExpense);
-      }
-
-      emit(ReceiptDeleted('Receipt deleted successfully'));
-    } catch (e) {
-      debugPrint('Delete receipt error: $e');
-      emit(ExpenseError('Failed to delete receipt: ${e.toString()}'));
     }
   }
 

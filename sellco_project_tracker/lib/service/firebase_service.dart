@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:io';
-import '../models/expense_model.dart';
+import '../models/expensesModels/expense_model.dart';
 
 class FirebaseService {
   static final FirebaseService _instance = FirebaseService._internal();
@@ -118,6 +118,10 @@ class FirebaseService {
   Future<String> createExpense(ExpenseModel expense) async {
     try {
       final docRef = await _firestore.collection('expenses').add(expense.toMap());
+
+      // Update the document with its own ID
+      await docRef.update({'expense_id': docRef.id});
+
       debugPrint('Expense created with ID: ${docRef.id}');
       return docRef.id;
     } catch (e) {
@@ -214,7 +218,12 @@ class FirebaseService {
       query = query.orderBy('expense_date', descending: true).limit(limit);
 
       final snapshot = await query.get();
-      return snapshot.docs.map((doc) => ExpenseModel.fromMap(doc.data() as Map<String, dynamic>)).toList();
+      return snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        // Ensure expense_id is set to the document ID
+        data['expense_id'] = doc.id;
+        return ExpenseModel.fromMap(data);
+      }).toList();
     } catch (e) {
       debugPrint('Get expenses error: $e');
       rethrow;
@@ -240,7 +249,12 @@ class FirebaseService {
       query = query.orderBy('expense_date', descending: true).limit(limit);
 
       return query.snapshots().map(
-            (snapshot) => snapshot.docs.map((doc) => ExpenseModel.fromMap(doc.data() as Map<String, dynamic>)).toList(),
+            (snapshot) => snapshot.docs.map((doc) {
+              final data = doc.data() as Map<String, dynamic>;
+              // Ensure expense_id is set to the document ID
+              data['expense_id'] = doc.id;
+              return ExpenseModel.fromMap(data);
+            }).toList(),
           );
     } catch (e) {
       debugPrint('Get expenses stream error: $e');
@@ -259,7 +273,12 @@ class FirebaseService {
           .orderBy('expense_date', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => ExpenseModel.fromMap(doc.data())).toList();
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        // Ensure expense_id is set to the document ID
+        data['expense_id'] = doc.id;
+        return ExpenseModel.fromMap(data);
+      }).toList();
     } catch (e) {
       debugPrint('Get expenses by date range error: $e');
       rethrow;
@@ -281,7 +300,12 @@ class FirebaseService {
       query = query.orderBy('expense_date', descending: true);
 
       final snapshot = await query.get();
-      return snapshot.docs.map((doc) => ExpenseModel.fromMap(doc.data() as Map<String, dynamic>)).toList();
+      return snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        // Ensure expense_id is set to the document ID
+        data['expense_id'] = doc.id;
+        return ExpenseModel.fromMap(data);
+      }).toList();
     } catch (e) {
       debugPrint('Get expenses by category error: $e');
       rethrow;
@@ -298,7 +322,12 @@ class FirebaseService {
           .orderBy('next_recurrence_date')
           .get();
 
-      return snapshot.docs.map((doc) => ExpenseModel.fromMap(doc.data())).toList();
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        // Ensure expense_id is set to the document ID
+        data['expense_id'] = doc.id;
+        return ExpenseModel.fromMap(data);
+      }).toList();
     } catch (e) {
       debugPrint('Get recurring expenses error: $e');
       rethrow;
@@ -317,7 +346,10 @@ class FirebaseService {
 
       double total = 0;
       for (var doc in snapshot.docs) {
-        final expense = ExpenseModel.fromMap(doc.data());
+        final data = doc.data();
+        // Ensure expense_id is set to the document ID
+        data['expense_id'] = doc.id;
+        final expense = ExpenseModel.fromMap(data);
         total += expense.amount;
       }
 
@@ -340,7 +372,10 @@ class FirebaseService {
 
       Map<String, double> stats = {};
       for (var doc in snapshot.docs) {
-        final expense = ExpenseModel.fromMap(doc.data());
+        final data = doc.data();
+        // Ensure expense_id is set to the document ID
+        data['expense_id'] = doc.id;
+        final expense = ExpenseModel.fromMap(data);
         stats[expense.category] = (stats[expense.category] ?? 0) + expense.amount;
       }
 
@@ -363,7 +398,12 @@ class FirebaseService {
 
       // Filter results client-side (Firestore doesn't support full-text search)
       final searchLower = searchTerm.toLowerCase();
-      final results = snapshot.docs.map((doc) => ExpenseModel.fromMap(doc.data())).where((expense) {
+      final results = snapshot.docs.map((doc) {
+        final data = doc.data();
+        // Ensure expense_id is set to the document ID
+        data['expense_id'] = doc.id;
+        return ExpenseModel.fromMap(data);
+      }).where((expense) {
         return expense.title.toLowerCase().contains(searchLower) ||
             expense.description.toLowerCase().contains(searchLower) ||
             expense.vendorName.toLowerCase().contains(searchLower) ||

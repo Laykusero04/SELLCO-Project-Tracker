@@ -1,5 +1,4 @@
-import 'dart:io';
-import '../../models/expense_model.dart';
+import '../../models/expensesModels/expense_model.dart';
 
 abstract class ExpenseEvent {}
 
@@ -34,18 +33,16 @@ class LoadExpenseDetails extends ExpenseEvent {
 // Add new expense
 class AddExpense extends ExpenseEvent {
   final ExpenseModel expense;
-  final List<File>? receiptFiles;
 
-  AddExpense(this.expense, {this.receiptFiles});
+  AddExpense(this.expense);
 }
 
 // Update existing expense
 class UpdateExpense extends ExpenseEvent {
   final String expenseId;
   final ExpenseModel expense;
-  final List<File>? newReceiptFiles;
 
-  UpdateExpense(this.expenseId, this.expense, {this.newReceiptFiles});
+  UpdateExpense(this.expenseId, this.expense);
 }
 
 // Delete expense
@@ -84,22 +81,6 @@ class FilterExpenses extends ExpenseEvent {
     this.endDate,
     this.isRecurring,
   });
-}
-
-// Upload receipt
-class UploadReceipt extends ExpenseEvent {
-  final String expenseId;
-  final File imageFile;
-
-  UploadReceipt(this.expenseId, this.imageFile);
-}
-
-// Delete receipt
-class DeleteReceipt extends ExpenseEvent {
-  final String expenseId;
-  final String receiptUrl;
-
-  DeleteReceipt(this.expenseId, this.receiptUrl);
 }
 
 // Approve expense

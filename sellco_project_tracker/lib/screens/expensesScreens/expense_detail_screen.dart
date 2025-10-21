@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import '../bloc/expense/expense_bloc.dart';
-import '../bloc/expense/expense_event.dart';
-import '../bloc/expense/expense_state.dart';
-import '../models/expense_model.dart';
-import '../components/constant/expense_categories.dart';
+import '../../bloc/expense/expense_bloc.dart';
+import '../../bloc/expense/expense_event.dart';
+import '../../bloc/expense/expense_state.dart';
+import '../../models/expensesModels/expense_model.dart';
+import '../../components/constant/expense_categories.dart';
 import 'expense_form_screen.dart';
 
 class ExpenseDetailScreen extends StatefulWidget {
@@ -429,44 +429,6 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
                             backgroundColor: Colors.grey[200],
                           );
                         }).toList(),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                ],
-
-                if (expense.receiptUrls.isNotEmpty) ...[
-                  _buildDetailSection(
-                    'Receipts',
-                    [
-                      SizedBox(
-                        height: 120,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: expense.receiptUrls.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 12),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.network(
-                                  expense.receiptUrls[index],
-                                  width: 120,
-                                  height: 120,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      width: 120,
-                                      height: 120,
-                                      color: Colors.grey[300],
-                                      child: const Icon(Icons.image_not_supported),
-                                    );
-                                  },
-                                ),
-                              ),
-                            );
-                          },
-                        ),
                       ),
                     ],
                   ),

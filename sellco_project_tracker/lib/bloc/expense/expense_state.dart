@@ -1,4 +1,4 @@
-import '../../models/expense_model.dart';
+import '../../models/expensesModels/expense_model.dart';
 
 abstract class ExpenseState {}
 
@@ -19,8 +19,9 @@ class ExpensesLoaded extends ExpenseState {
 // Single expense loaded
 class ExpenseDetailsLoaded extends ExpenseState {
   final ExpenseModel expense;
+  final List<ExpenseModel>? preservedExpensesList;
 
-  ExpenseDetailsLoaded(this.expense);
+  ExpenseDetailsLoaded(this.expense, {this.preservedExpensesList});
 }
 
 // Expense operation successful
@@ -51,20 +52,6 @@ class ExpenseStatisticsLoaded extends ExpenseState {
     required this.startDate,
     required this.endDate,
   });
-}
-
-// Receipt uploaded
-class ReceiptUploaded extends ExpenseState {
-  final String receiptUrl;
-
-  ReceiptUploaded(this.receiptUrl);
-}
-
-// Receipt deleted
-class ReceiptDeleted extends ExpenseState {
-  final String message;
-
-  ReceiptDeleted(this.message);
 }
 
 // Export completed

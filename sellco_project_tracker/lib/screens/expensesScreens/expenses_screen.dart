@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import '../bloc/expense/expense_bloc.dart';
-import '../bloc/expense/expense_event.dart';
-import '../bloc/expense/expense_state.dart';
-import '../models/expense_model.dart';
-import '../components/constant/expense_categories.dart';
-import '../components/custom_app_bar.dart';
+import '../../bloc/expense/expense_bloc.dart';
+import '../../bloc/expense/expense_event.dart';
+import '../../bloc/expense/expense_state.dart';
+import '../../models/expensesModels/expense_model.dart';
+import '../../components/constant/expense_categories.dart';
+import '../../components/custom_app_bar.dart';
 import 'expense_form_screen.dart';
 import 'expense_detail_screen.dart';
 
@@ -354,10 +354,15 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
               builder: (context, state) {
                 if (state is ExpenseLoading) {
                   return const Center(child: CircularProgressIndicator());
-                } else if (state is ExpensesLoaded || state is ExpenseSearchResults) {
+                } else if (state is ExpensesLoaded || 
+                           state is ExpenseSearchResults ||
+                           state is ExpenseDetailsLoaded) {
+                  // Get the expenses list from the state
                   final expenses = state is ExpensesLoaded
                       ? state.expenses
-                      : (state as ExpenseSearchResults).results;
+                      : state is ExpenseSearchResults
+                          ? state.results
+                          : (state as ExpenseDetailsLoaded).preservedExpensesList ?? [];
 
                   if (expenses.isEmpty) {
                     return Center(
@@ -563,10 +568,6 @@ class _ExpenseCard extends StatelessWidget {
                         if (expense.isRecurring) ...[
                           const SizedBox(width: 8),
                           Icon(Icons.repeat, size: 12, color: Colors.grey[600]),
-                        ],
-                        if (expense.receiptUrls.isNotEmpty) ...[
-                          const SizedBox(width: 8),
-                          Icon(Icons.attach_file, size: 12, color: Colors.grey[600]),
                         ],
                       ],
                     ),
